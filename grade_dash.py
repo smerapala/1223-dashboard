@@ -72,6 +72,22 @@ for label in hw_labels:
 hw_bar = go.Figure(go.Bar(name='Homework Grades', x=hw_labels, y=hw_grades))
 hw_bar.update_traces(marker_color='rgb(147,112,219)', marker_line_color='rgb(148,0,211)', marker_line_width=1.5, opacity=0.6)
 hw_bar.update_layout(xaxis_title='homework assignment', yaxis_title='average')
+hw_bar.update_yaxes(range=[0,100])
+
+
+# Project
+project_labels = ['Fun With Strings', 'Fun With Branching', 'Guess a Number', 'Credit Card Check Digit',
+'Bar Chart Scoreboard', 'Dragon Trainers Tournament', 'Binary and Integer Conversions', 'Hi-Low Game', 'Poker Dice',
+'Substitution Cipher', 'Guess the Word', 'Simple Clock']
+
+project_grades = []
+for label in project_labels:
+    project_grades.append( dataset[label].mean() * 100 / dataset[label].max() )
+
+project_bar = go.Figure(go.Bar(name='Project Grades', x=project_labels, y=project_grades))
+project_bar.update_traces(marker_color='rgb(119,221,119)', marker_line_color='rgb(41,162,41)', marker_line_width=1.5, opacity=0.6)
+project_bar.update_layout(xaxis_title='project assignment', yaxis_title='average')
+project_bar.update_yaxes(range=[0,100])
 
 
 # EXAM GRADES TAB
@@ -159,8 +175,8 @@ r = dp.Report(
         dp.Plot(lab_bar),
         f'### Homeworks',
         dp.Plot(hw_bar),
-        #  f'### Projects',
-        # dp.Plot(project_bar)
+         f'### Projects',
+        dp.Plot(project_bar)
         ]
     ),
     dp.Page(
