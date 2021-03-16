@@ -45,17 +45,36 @@ num_students = len(dataset)
 pass_rate = round( (np.sum(dataset['Final Grade'] >= 60)) * 100 / num_students, 2)
 
 
-# FINAL GRADES TAB
-fg_hist = px.histogram(dataset, x="Final Grade")
+# DELIVERABLES TAB
 
-letter_pie = go.Figure(go.Pie(labels= dataset["CRSE_GRADE_OFF"]))
 
 # EXAM GRADES TAB
 exam_labels = ['midterm1', 'midterm2', "final"]
 exams_kdp = ff.create_distplot([dataset['Midterm I (43527)'], dataset['Midterm II (43528)'], dataset['Final Exam (43512)']], exam_labels)
 
 
+# FINAL GRADES TAB
+fg_hist = px.histogram(dataset, x="Final Grade")
+
+letter_pie = go.Figure(go.Pie(labels= dataset["CRSE_GRADE_OFF"]))
+
+
 # DEMOGRAPHICS TAB
+lab_labels = ['Fill An Array', 'Introducing Methods', 'Using The Debugger', 'Fill An Array Randomly', 'Fun With Files',
+    'ROT13 Encryption', 'Fun With Lists', 'Fun With Classes']
+
+hw_labels = ['Participation', 'Reading Assignment 2', 'Reading Assignment 3', 'Reading Assignment 4', 'Reading Assignment 5',
+    'Tracing Table Practice', 'Reading Assignment 6','Reading Assignment 7','Reading Assignment 8', 'Reading Assignment 9',
+    'Reading Assignment 10', 'Background Survey']
+
+lab_grades = []
+for label in lab_labels:
+    lab_grades.append( dataset[label].mean() * 100 / dataset[label].max() )
+
+lab_bar = go.Figure(go.Bar(name='Lab Grades', x=lab_labels, y=lab_grades))
+lab_bar.update_traces(marker_color='rgb(158,202,225)', marker_line_color='rgb(8,48,107)', marker_line_width=1.5, opacity=0.6)
+lab_bar.update_layout(xaxis_title='lab assignment', yaxis_title='average' )
+
 
 # Sex - Histogram
 female_cols = dataset[dataset['SEX'] == 'F']['Final Grade']
@@ -123,11 +142,14 @@ r = dp.Report(
         ]
     ),
     dp.Page(
-        label='Final Grades',
+        label='Deliverables',
         blocks=[
-        f'### Comparing Final Grade Data ',
-        dp.Plot(fg_hist),
-        dp.Plot(letter_pie)
+        f'### Labs',
+        dp.Plot(lab_bar),
+        # f'### Homeworks',
+        # dp.Plot(hw_bar),
+        #  f'### Projects',
+        # dp.Plot(project_bar)
         ]
     ),
     dp.Page(
@@ -137,16 +159,23 @@ r = dp.Report(
         dp.Plot(exams_kdp)]
     ),
     dp.Page(
+        label='Final Grades',
+        blocks=[
+        f'### Comparing Final Grade Data ',
+        dp.Plot(fg_hist),
+        dp.Plot(letter_pie)
+        ]
+    ),
+    dp.Page(
         dp.Select(blocks=[
             dp.Plot(sex_bar, label='Sex-Bar Chart'),
             dp.Plot(urm_bar, label='URM-Bar Chart'),
             dp.Plot(race_bar, label='Race-Bar Chart'),
             dp.Plot(sex_kdp, label='Sex-KDP')
         ], type=dp.SelectType.DROPDOWN),
-        label='Demographics'
+        label='Demographics',
         #blocks=[f'### Comparing Final Grade Data among Various Demographics']
     )
-    #dp.DataTable(df),
 )
 
 # Publish
