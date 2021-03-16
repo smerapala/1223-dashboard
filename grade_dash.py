@@ -39,53 +39,68 @@ html = """
 </html>
 """
 
-fig = px.histogram(dataset, x="Final Grade")
-
-# def f(col):
-#     fig = px.histogram(dataset, x=col)
-#     # dataset.loc[col].iplot(
-#     #     xTitle='Student', 
-#     #     yTitle='Grades for {}'.format(col),
-#     #     title='Grades for Students'
-#     #     )
-
-# interact(f, col=list(dataset.columns))
-
-# fig = f(dataset.columns)
-
-fig = px.histogram(dataset, x="Final Grade")
-
-exam_labels = ['midterm1', 'midterm2', "final"]
-fig2 = ff.create_distplot([dataset['Midterm I (43527)'], dataset['Midterm II (43528)'], dataset['Final Exam (43512)']], exam_labels)
-
+# INTRODUCTION TAB
 class_average = round(dataset["Final Grade"].mean(), 2)
 num_students = len(dataset)
 pass_rate = round( (np.sum(dataset['Final Grade'] >= 60)) * 100 / num_students, 2)
 
-female = dataset[dataset['SEX'] == 'F']['Final Grade']
-male = dataset[dataset['SEX'] == 'M']['Final Grade']
 
+# FINAL GRADES TAB
+fg_hist = px.histogram(dataset, x="Final Grade")
+
+letter_pie = go.Figure(go.Pie(labels= dataset["CRSE_GRADE_OFF"]))
+
+# EXAM GRADES TAB
+exam_labels = ['midterm1', 'midterm2', "final"]
+exams_kdp = ff.create_distplot([dataset['Midterm I (43527)'], dataset['Midterm II (43528)'], dataset['Final Exam (43512)']], exam_labels)
+
+
+# DEMOGRAPHICS TAB
+
+# Sex - Histogram
+female_cols = dataset[dataset['SEX'] == 'F']['Final Grade']
+male_cols = dataset[dataset['SEX'] == 'M']['Final Grade']
 sex_labels = ['Female', 'Male']
-sex_comp = ff.create_distplot([female, male], sex_labels)
+sex_kdp = ff.create_distplot([female_cols, male_cols], sex_labels)
 
-# bar_df = df = pd.DataFrame(columns=["MT1", "MT2"], data=[[5,np.nan]])
+# Sex - Bar Chart
+female_df = dataset.loc[dataset['SEX'] == 'F']
+male_df = dataset.loc[dataset['SEX'] == 'M']
 
-# fig = px.bar(bar_df, x="sex", y="total_bill",
-#              color='SEX', barmode='group',
-#              height=400)
-
- 
-#animals=['MT1', 'MT2', 'Final']
-
-female = dataset.loc[dataset['SEX'] == 'F']
-male = dataset.loc[dataset['SEX'] == 'M']
-
-bar_fig = go.Figure(data=[
-    go.Bar(name='Female', x=exam_labels, y=[female['Midterm I (43527)'].mean(), female['Midterm II (43528)'].mean(), female['Final Exam (43512)'].mean()]),
-    go.Bar(name='Male', x=exam_labels, y=[male['Midterm I (43527)'].mean(), male['Midterm II (43528)'].mean(), male['Final Exam (43512)'].mean()])
+sex_bar = go.Figure(data=[
+    go.Bar(name='Female', x=exam_labels, y=[female_df['Midterm I (43527)'].mean(), female_df['Midterm II (43528)'].mean(), female_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Male', x=exam_labels, y=[male_df['Midterm I (43527)'].mean(), male_df['Midterm II (43528)'].mean(), male_df['Final Exam (43512)'].mean()])
 ])
 # Change the bar mode
-bar_fig.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='sex', barmode='group')
+sex_bar.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='sex', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.6)
+
+# URM - Bar Chart
+urm_df = dataset.loc[dataset['URM Status'] == 'URM']
+nonurm_df = dataset.loc[dataset['URM Status'] == 'Non-URM']
+
+urm_bar = go.Figure(data=[
+    go.Bar(name='URM', x=exam_labels, y=[urm_df['Midterm I (43527)'].mean(), urm_df['Midterm II (43528)'].mean(), urm_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Non-URM', x=exam_labels, y=[nonurm_df['Midterm I (43527)'].mean(), nonurm_df['Midterm II (43528)'].mean(), nonurm_df['Final Exam (43512)'].mean()])
+])
+# Change the bar mode
+urm_bar.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='URM Status', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.6)
+
+# Race - Bar Chart
+white_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'White']
+asian_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'Asian']
+black_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'Black or African American']
+hispanic_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'Hispanic']
+alien_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'Non-Resident Alien']
+
+race_bar = go.Figure(data=[
+    go.Bar(name='White', x=exam_labels, y=[white_df['Midterm I (43527)'].mean(), white_df['Midterm II (43528)'].mean(), white_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Asian', x=exam_labels, y=[asian_df['Midterm I (43527)'].mean(), asian_df['Midterm II (43528)'].mean(), asian_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Black/African American', x=exam_labels, y=[black_df['Midterm I (43527)'].mean(), black_df['Midterm II (43528)'].mean(), black_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Hispanic', x=exam_labels, y=[hispanic_df['Midterm I (43527)'].mean(), hispanic_df['Midterm II (43528)'].mean(), hispanic_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Non-resident Alien', x=exam_labels, y=[alien_df['Midterm I (43527)'].mean(), alien_df['Midterm II (43528)'].mean(), alien_df['Final Exam (43512)'].mean()])
+])
+# Change the bar mode
+race_bar.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='Race', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.3)
 
 
 # Create report
@@ -111,18 +126,22 @@ r = dp.Report(
         label='Final Grades',
         blocks=[
         f'### Comparing Final Grade Data ',
-        dp.Plot(fig)]
+        dp.Plot(fg_hist),
+        dp.Plot(letter_pie)
+        ]
     ),
     dp.Page(
         label='Exam Grades',
         blocks=[
         f'### Kernel Density Plot ',
-        dp.Plot(fig2)]
+        dp.Plot(exams_kdp)]
     ),
     dp.Page(
         dp.Select(blocks=[
-            dp.Plot(sex_comp, label='Hist'),
-            dp.Plot(bar_fig, label='Bar Chart')
+            dp.Plot(sex_bar, label='Sex-Bar Chart'),
+            dp.Plot(urm_bar, label='URM-Bar Chart'),
+            dp.Plot(race_bar, label='Race-Bar Chart'),
+            dp.Plot(sex_kdp, label='Sex-KDP')
         ], type=dp.SelectType.DROPDOWN),
         label='Demographics'
         #blocks=[f'### Comparing Final Grade Data among Various Demographics']
@@ -131,5 +150,4 @@ r = dp.Report(
 )
 
 # Publish
-r.publish(name=f'CSE 1223 Dashboard', open=True, description=f'Grade Data for CSE 1223')
-
+r.publish(name=f'CSE 1223 Dashboard AU19', open=True, description=f'Grade Data for CSE 1223 during the AU19 semester')
