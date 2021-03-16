@@ -47,6 +47,32 @@ pass_rate = round( (np.sum(dataset['Final Grade'] >= 60)) * 100 / num_students, 
 
 # DELIVERABLES TAB
 
+# Lab
+lab_labels = ['Fill An Array', 'Introducing Methods', 'Using The Debugger', 'Fill An Array Randomly', 'Fun With Files',
+    'ROT13 Encryption', 'Fun With Lists', 'Fun With Classes']
+
+lab_grades = []
+for label in lab_labels:
+    lab_grades.append( dataset[label].mean() * 100 / dataset[label].max() )
+
+lab_bar = go.Figure(go.Bar(name='Lab Grades', x=lab_labels, y=lab_grades))
+lab_bar.update_traces(marker_color='rgb(158,202,225)', marker_line_color='rgb(8,48,107)', marker_line_width=1.5, opacity=0.6)
+lab_bar.update_layout(xaxis_title='lab assignment', yaxis_title='average')
+lab_bar.update_yaxes(range=[0,100])
+
+# Homework
+hw_labels = ['Participation', 'Reading Assignment 2', 'Reading Assignment 3', 'Reading Assignment 4', 'Reading Assignment 5',
+    'Tracing Table Practice', 'Reading Assignment 6','Reading Assignment 7','Reading Assignment 8', 'Reading Assignment 9',
+    'Reading Assignment 10', 'Background Survey']
+
+hw_grades = []
+for label in hw_labels:
+    hw_grades.append( dataset[label].mean() * 100 / dataset[label].max() )
+
+hw_bar = go.Figure(go.Bar(name='Homework Grades', x=hw_labels, y=hw_grades))
+hw_bar.update_traces(marker_color='rgb(147,112,219)', marker_line_color='rgb(148,0,211)', marker_line_width=1.5, opacity=0.6)
+hw_bar.update_layout(xaxis_title='homework assignment', yaxis_title='average')
+
 
 # EXAM GRADES TAB
 exam_labels = ['midterm1', 'midterm2', "final"]
@@ -60,21 +86,6 @@ letter_pie = go.Figure(go.Pie(labels= dataset["CRSE_GRADE_OFF"]))
 
 
 # DEMOGRAPHICS TAB
-lab_labels = ['Fill An Array', 'Introducing Methods', 'Using The Debugger', 'Fill An Array Randomly', 'Fun With Files',
-    'ROT13 Encryption', 'Fun With Lists', 'Fun With Classes']
-
-hw_labels = ['Participation', 'Reading Assignment 2', 'Reading Assignment 3', 'Reading Assignment 4', 'Reading Assignment 5',
-    'Tracing Table Practice', 'Reading Assignment 6','Reading Assignment 7','Reading Assignment 8', 'Reading Assignment 9',
-    'Reading Assignment 10', 'Background Survey']
-
-lab_grades = []
-for label in lab_labels:
-    lab_grades.append( dataset[label].mean() * 100 / dataset[label].max() )
-
-lab_bar = go.Figure(go.Bar(name='Lab Grades', x=lab_labels, y=lab_grades))
-lab_bar.update_traces(marker_color='rgb(158,202,225)', marker_line_color='rgb(8,48,107)', marker_line_width=1.5, opacity=0.6)
-lab_bar.update_layout(xaxis_title='lab assignment', yaxis_title='average' )
-
 
 # Sex - Histogram
 female_cols = dataset[dataset['SEX'] == 'F']['Final Grade']
@@ -146,8 +157,8 @@ r = dp.Report(
         blocks=[
         f'### Labs',
         dp.Plot(lab_bar),
-        # f'### Homeworks',
-        # dp.Plot(hw_bar),
+        f'### Homeworks',
+        dp.Plot(hw_bar),
         #  f'### Projects',
         # dp.Plot(project_bar)
         ]
