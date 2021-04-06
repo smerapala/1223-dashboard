@@ -52,8 +52,15 @@ lab_labels = ['Fill An Array', 'Introducing Methods', 'Using The Debugger', 'Fil
     'ROT13 Encryption', 'Fun With Lists', 'Fun With Classes']
 
 lab_grades = []
+lab_cnt = 0
+lab_avg = 0
 for label in lab_labels:
-    lab_grades.append( dataset[label].mean() * 100 / dataset[label].max() )
+    curr_avg = dataset[label].mean() * 100 / dataset[label].max()
+    lab_grades.append(curr_avg)
+    lab_cnt += 1
+    lab_avg += curr_avg
+
+lab_avg /= lab_cnt
 
 lab_bar = go.Figure(go.Bar(name='Lab Grades', x=lab_labels, y=lab_grades))
 lab_bar.update_traces(marker_color='rgb(158,202,225)', marker_line_color='rgb(8,48,107)', marker_line_width=1.5, opacity=0.6)
@@ -66,14 +73,20 @@ hw_labels = ['Participation', 'Reading Assignment 2', 'Reading Assignment 3', 'R
     'Reading Assignment 10', 'Background Survey']
 
 hw_grades = []
+hw_cnt = 0
+hw_avg = 0
 for label in hw_labels:
-    hw_grades.append( dataset[label].mean() * 100 / dataset[label].max() )
+    curr_avg = dataset[label].mean() * 100 / dataset[label].max()
+    hw_grades.append(curr_avg)
+    hw_cnt += 1
+    hw_avg += curr_avg
+
+hw_avg /= hw_cnt
 
 hw_bar = go.Figure(go.Bar(name='Homework Grades', x=hw_labels, y=hw_grades))
 hw_bar.update_traces(marker_color='rgb(147,112,219)', marker_line_color='rgb(148,0,211)', marker_line_width=1.5, opacity=0.6)
 hw_bar.update_layout(xaxis_title='homework assignment', yaxis_title='average')
 hw_bar.update_yaxes(range=[0,100])
-
 
 # Project
 project_labels = ['Fun With Strings', 'Fun With Branching', 'Guess a Number', 'Credit Card Check Digit',
@@ -81,13 +94,28 @@ project_labels = ['Fun With Strings', 'Fun With Branching', 'Guess a Number', 'C
 'Substitution Cipher', 'Guess the Word', 'Simple Clock']
 
 project_grades = []
+project_cnt = 0
+project_avg = 0
 for label in project_labels:
-    project_grades.append( dataset[label].mean() * 100 / dataset[label].max() )
+    curr_avg = dataset[label].mean() * 100 / dataset[label].max()
+    project_grades.append(curr_avg)
+    project_cnt += 1
+    project_avg += curr_avg
+
+project_avg /= project_cnt
 
 project_bar = go.Figure(go.Bar(name='Project Grades', x=project_labels, y=project_grades))
 project_bar.update_traces(marker_color='rgb(119,221,119)', marker_line_color='rgb(41,162,41)', marker_line_width=1.5, opacity=0.6)
 project_bar.update_layout(xaxis_title='project assignment', yaxis_title='average')
 project_bar.update_yaxes(range=[0,100])
+
+# Overall
+overall_labels = ['lab', 'homework', 'project', 'midterm1', 'midterm2', "final"]
+
+overall_bar = go.Figure(data=[
+    go.Bar(name='Overall', x=overall_labels, y=[lab_avg, hw_avg, project_avg, dataset['Midterm I (43527)'].mean(), dataset['Midterm II (43528)'].mean(), dataset['Final Exam (43512)'].mean()]),
+])
+overall_bar.update_traces(marker_color='rgb(255,182,193)', marker_line_color='rgb(219,112,147)', marker_line_width=1.5, opacity=0.6)
 
 
 # EXAM GRADES TAB
@@ -138,13 +166,22 @@ black_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'Black or African Americ
 hispanic_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'Hispanic']
 alien_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'Non-Resident Alien']
 
+# race_bar = go.Figure(data=[
+#     go.Bar(name='White', x=exam_labels, y=[white_df['Midterm I (43527)'].mean(), white_df['Midterm II (43528)'].mean(), white_df['Final Exam (43512)'].mean()]),
+#     go.Bar(name='Asian', x=exam_labels, y=[asian_df['Midterm I (43527)'].mean(), asian_df['Midterm II (43528)'].mean(), asian_df['Final Exam (43512)'].mean()]),
+#     go.Bar(name='Black/African American', x=exam_labels, y=[black_df['Midterm I (43527)'].mean(), black_df['Midterm II (43528)'].mean(), black_df['Final Exam (43512)'].mean()]),
+#     go.Bar(name='Hispanic', x=exam_labels, y=[hispanic_df['Midterm I (43527)'].mean(), hispanic_df['Midterm II (43528)'].mean(), hispanic_df['Final Exam (43512)'].mean()]),
+#     go.Bar(name='Non-resident Alien', x=exam_labels, y=[alien_df['Midterm I (43527)'].mean(), alien_df['Midterm II (43528)'].mean(), alien_df['Final Exam (43512)'].mean()])
+# ])
+
 race_bar = go.Figure(data=[
-    go.Bar(name='White', x=exam_labels, y=[white_df['Midterm I (43527)'].mean(), white_df['Midterm II (43528)'].mean(), white_df['Final Exam (43512)'].mean()]),
-    go.Bar(name='Asian', x=exam_labels, y=[asian_df['Midterm I (43527)'].mean(), asian_df['Midterm II (43528)'].mean(), asian_df['Final Exam (43512)'].mean()]),
-    go.Bar(name='Black/African American', x=exam_labels, y=[black_df['Midterm I (43527)'].mean(), black_df['Midterm II (43528)'].mean(), black_df['Final Exam (43512)'].mean()]),
-    go.Bar(name='Hispanic', x=exam_labels, y=[hispanic_df['Midterm I (43527)'].mean(), hispanic_df['Midterm II (43528)'].mean(), hispanic_df['Final Exam (43512)'].mean()]),
-    go.Bar(name='Non-resident Alien', x=exam_labels, y=[alien_df['Midterm I (43527)'].mean(), alien_df['Midterm II (43528)'].mean(), alien_df['Final Exam (43512)'].mean()])
+    go.Bar(name='White', x=exam_labels, y=[white_df['Midterm I (43527)'].median(), white_df['Midterm II (43528)'].median(), white_df['Final Exam (43512)'].median()]),
+    go.Bar(name='Asian', x=exam_labels, y=[asian_df['Midterm I (43527)'].median(), asian_df['Midterm II (43528)'].median(), asian_df['Final Exam (43512)'].median()]),
+    go.Bar(name='Black/African American', x=exam_labels, y=[black_df['Midterm I (43527)'].median(), black_df['Midterm II (43528)'].median(), black_df['Final Exam (43512)'].median()]),
+    go.Bar(name='Hispanic', x=exam_labels, y=[hispanic_df['Midterm I (43527)'].median(), hispanic_df['Midterm II (43528)'].median(), hispanic_df['Final Exam (43512)'].median()]),
+    go.Bar(name='Non-resident Alien', x=exam_labels, y=[alien_df['Midterm I (43527)'].median(), alien_df['Midterm II (43528)'].median(), alien_df['Final Exam (43512)'].median()])
 ])
+
 # Change the bar mode
 race_bar.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='Race', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.3)
 
@@ -171,6 +208,8 @@ r = dp.Report(
     dp.Page(
         label='Deliverables',
         blocks=[
+        f'### Overall',
+        dp.Plot(overall_bar),
         f'### Labs',
         dp.Plot(lab_bar),
         f'### Homeworks',
@@ -190,7 +229,8 @@ r = dp.Report(
         blocks=[
         f'### Comparing Final Grade Data ',
         dp.Plot(fg_hist),
-        dp.Plot(letter_pie)
+        dp.Plot(letter_pie),
+        dp.BigNumber(heading="N", value=str(num_students) + " students")
         ]
     ),
     dp.Page(
