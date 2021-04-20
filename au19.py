@@ -34,7 +34,7 @@ html = """
         }
     </style>
     <div id="container">
-      <h1 style="text-indent: 300px"> CSE 1223 Dashboard </h1>
+      <h1 style="text-indent: 300px"> CSE 1223 AU 19 Dashboard </h1>
     </div>
 </html>
 """
@@ -141,23 +141,38 @@ sex_kdp = ff.create_distplot([female_cols, male_cols], sex_labels)
 female_df = dataset.loc[dataset['SEX'] == 'F']
 male_df = dataset.loc[dataset['SEX'] == 'M']
 
-sex_bar = go.Figure(data=[
+sex_bar_mean = go.Figure(data=[
     go.Bar(name='Female', x=exam_labels, y=[female_df['Midterm I (43527)'].mean(), female_df['Midterm II (43528)'].mean(), female_df['Final Exam (43512)'].mean()]),
     go.Bar(name='Male', x=exam_labels, y=[male_df['Midterm I (43527)'].mean(), male_df['Midterm II (43528)'].mean(), male_df['Final Exam (43512)'].mean()])
 ])
 # Change the bar mode
-sex_bar.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='sex', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.6)
+sex_bar_mean.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='sex', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.6)
+
+sex_bar_median = go.Figure(data=[
+    go.Bar(name='Female', x=exam_labels, y=[female_df['Midterm I (43527)'].median(), female_df['Midterm II (43528)'].median(), female_df['Final Exam (43512)'].median()]),
+    go.Bar(name='Male', x=exam_labels, y=[male_df['Midterm I (43527)'].median(), male_df['Midterm II (43528)'].median(), male_df['Final Exam (43512)'].median()])
+])
+# Change the bar mode
+sex_bar_median.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='sex', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.6)
+
 
 # URM - Bar Chart
 urm_df = dataset.loc[dataset['URM Status'] == 'URM']
 nonurm_df = dataset.loc[dataset['URM Status'] == 'Non-URM']
 
-urm_bar = go.Figure(data=[
+urm_bar_mean = go.Figure(data=[
     go.Bar(name='URM', x=exam_labels, y=[urm_df['Midterm I (43527)'].mean(), urm_df['Midterm II (43528)'].mean(), urm_df['Final Exam (43512)'].mean()]),
     go.Bar(name='Non-URM', x=exam_labels, y=[nonurm_df['Midterm I (43527)'].mean(), nonurm_df['Midterm II (43528)'].mean(), nonurm_df['Final Exam (43512)'].mean()])
 ])
 # Change the bar mode
-urm_bar.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='URM Status', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.6)
+urm_bar_mean.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='URM Status', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.6)
+
+urm_bar_median = go.Figure(data=[
+    go.Bar(name='URM', x=exam_labels, y=[urm_df['Midterm I (43527)'].median(), urm_df['Midterm II (43528)'].median(), urm_df['Final Exam (43512)'].median()]),
+    go.Bar(name='Non-URM', x=exam_labels, y=[nonurm_df['Midterm I (43527)'].median(), nonurm_df['Midterm II (43528)'].median(), nonurm_df['Final Exam (43512)'].median()])
+])
+# Change the bar mode
+urm_bar_median.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='URM Status', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.6)
 
 # Race - Bar Chart
 white_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'White']
@@ -174,7 +189,18 @@ alien_df = dataset.loc[dataset['OCC_RPT_ETH_CD_DSC'] == 'Non-Resident Alien']
 #     go.Bar(name='Non-resident Alien', x=exam_labels, y=[alien_df['Midterm I (43527)'].mean(), alien_df['Midterm II (43528)'].mean(), alien_df['Final Exam (43512)'].mean()])
 # ])
 
-race_bar = go.Figure(data=[
+race_bar_mean = go.Figure(data=[
+    go.Bar(name='White', x=exam_labels, y=[white_df['Midterm I (43527)'].mean(), white_df['Midterm II (43528)']. mean(), white_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Asian', x=exam_labels, y=[asian_df['Midterm I (43527)'].mean(), asian_df['Midterm II (43528)'].mean(), asian_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Black/African American', x=exam_labels, y=[black_df['Midterm I (43527)'].mean(), black_df['Midterm II (43528)'].mean(), black_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Hispanic', x=exam_labels, y=[hispanic_df['Midterm I (43527)'].mean(), hispanic_df['Midterm II (43528)'].mean(), hispanic_df['Final Exam (43512)'].mean()]),
+    go.Bar(name='Non-resident Alien', x=exam_labels, y=[alien_df['Midterm I (43527)'].mean(), alien_df['Midterm II (43528)'].mean(), alien_df['Final Exam (43512)'].mean()])
+])
+
+# Change the bar mode
+race_bar_mean.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='Race', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.3)
+
+race_bar_median = go.Figure(data=[
     go.Bar(name='White', x=exam_labels, y=[white_df['Midterm I (43527)'].median(), white_df['Midterm II (43528)'].median(), white_df['Final Exam (43512)'].median()]),
     go.Bar(name='Asian', x=exam_labels, y=[asian_df['Midterm I (43527)'].median(), asian_df['Midterm II (43528)'].median(), asian_df['Final Exam (43512)'].median()]),
     go.Bar(name='Black/African American', x=exam_labels, y=[black_df['Midterm I (43527)'].median(), black_df['Midterm II (43528)'].median(), black_df['Final Exam (43512)'].median()]),
@@ -183,7 +209,7 @@ race_bar = go.Figure(data=[
 ])
 
 # Change the bar mode
-race_bar.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='Race', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.3)
+race_bar_median.update_layout(xaxis_title='assignment', yaxis_title='average', legend_title='Race', legend_bordercolor='black', legend_borderwidth=2, barmode='group', bargap=.3)
 
 
 # Create report
@@ -235,10 +261,13 @@ r = dp.Report(
     ),
     dp.Page(
         dp.Select(blocks=[
-            dp.Plot(sex_bar, label='Sex-Bar Chart'),
-            dp.Plot(urm_bar, label='URM-Bar Chart'),
-            dp.Plot(race_bar, label='Race-Bar Chart'),
-            dp.Plot(sex_kdp, label='Sex-KDP')
+            dp.Plot(sex_bar_mean, label='Sex-Mean'),
+            dp.Plot(sex_bar_median, label='Sex-Median'),
+            dp.Plot(urm_bar_mean, label='URM-Mean'),
+            dp.Plot(urm_bar_median, label='URM-Median'),
+            dp.Plot(race_bar_mean, label='Race-Mean'),
+            dp.Plot(race_bar_median, label='Race-Median')
+            #dp.Plot(sex_kdp, label='Sex-KDP')
         ], type=dp.SelectType.DROPDOWN),
         label='Demographics',
         #blocks=[f'### Comparing Final Grade Data among Various Demographics']
